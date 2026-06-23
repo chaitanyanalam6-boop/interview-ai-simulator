@@ -22,7 +22,7 @@ st.markdown("""
 .block-container { padding: 0 !important; max-width: 100% !important; }
 [data-testid="stVerticalBlock"] { gap: 0 !important; }
 
-/* --- BUTTON TEXT VISIBILITY FIX --- */
+/* --- CLEAN COMPONENT LEVEL OVERRIDES --- */
 div.stButton > button { 
     color: #1e293b !important; 
     background-color: #f1f5f9 !important;
@@ -31,7 +31,11 @@ div.stButton > button {
     font-family: 'Inter', sans-serif !important; 
     font-weight: 600 !important; 
     font-size: 1rem !important; 
-    padding: 12px 24px !important;
+    padding: 12px 32px !important; /* Increased horizontal breathing room */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 220px !important; /* Prevents button compression on large monitors */
     transition: all 0.2s ease;
 }
 div.stButton > button:hover {
@@ -48,14 +52,18 @@ div.stButton > button[type="primary"]:hover {
     background-color: #4f46e5 !important;
 }
 
-/* --- TEXT INPUT STYLING --- */
+/* Fix audio widget layout spacing container */
+[data-testid="stAudioInput"] {
+    margin-top: 12px !important;
+}
+
 div.stTextInput > div > div > input {
     border-radius: 10px !important; border: 1.5px solid #e2e8f0 !important;
     padding: 14px 16px !important; font-size: 1rem !important;
     font-family: 'Inter', sans-serif !important; background: #fff !important; color: #0f172a !important;
 }
 
-/* --- UNIVERSAL BREAKPOINTS FOR PERFECT MOBILE RESPONSIVENESS --- */
+/* --- RESPONSIVE LAYOUT CONSTRAINTS --- */
 .nav {
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 24px; height: 64px; border-bottom: 1px solid #e2e8f0;
@@ -91,7 +99,6 @@ div.stTextInput > div > div > input {
 .mock-bubble { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; font-size: 0.85rem; line-height: 1.5; color: #374151; }
 .mock-bubble.ai { border-left: 3px solid #6366f1; }
 .mock-bubble.user { background: #f0f9ff; border-left: 3px solid #0ea5e9; }
-.mock-score { display: flex; flex-direction: column; gap: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px; }
 
 .features { background: #f8fafc; padding: 64px 24px; border-top: 1px solid #e2e8f0; }
 .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #6366f1; margin-bottom: 12px; text-align: center; }
@@ -179,12 +186,6 @@ if st.session_state.stage == "home":
             </div>
             <div class="mock-bubble ai">Tell me about a time you had to debug a complex production issue. Walk me through your process.</div>
             <div class="mock-bubble user">Sure — last quarter we had a memory leak in our Node service. I isolated it using heap snapshots and traced it back to an event listener that wasn't being cleaned up...</div>
-            <div class="mock-score">
-                <div><div style="font-size:0.78rem; color:#15803d; font-weight:600;">Score</div><div class="score-val">8 / 10</div></div>
-                <div style="flex:1;">
-                    <div style="font-size:0.78rem; color:#64748b; margin-bottom:4px;">Strong structure. Add quantified impact.</div>
-                </div>
-            </div>
         </div>
     </section>""", unsafe_allow_html=True)
 
@@ -195,7 +196,7 @@ if st.session_state.stage == "home":
             <div class="section-title">Everything you need to prepare</div>
             <div class="section-sub">IntervAI listens, scores, and coaches — so you walk into every interview ready.</div>
             <div class="features-grid">
-                <div class="feature-card"><div class="feature-icon">🎙️</div><h3>Voice answers</h3><p>Speak naturally like a real interview. Your answer is transcribed and scored instantly.</p></div>
+                <div class="feature-card"><div class="feature-icon">🎙️</div> AquaSkins <h3>Voice answers</h3><p>Speak naturally like a real interview. Your answer is transcribed and scored instantly.</p></div>
                 <div class="feature-card"><div class="feature-icon">🤖</div><h3>AI-tailored questions</h3><p>Questions generated specifically for your target role — not generic lists.</p></div>
                 <div class="feature-card"><div class="feature-icon">📊</div><h3>Instant scoring</h3><p>Get a 1–10 score with detailed feedback on how to improve each answer.</p></div>
                 <div class="feature-card"><div class="feature-icon">🎯</div><h3>Any role or industry</h3><p>Software engineer, data analyst, product manager — just tell us the role.</p></div>
@@ -280,20 +281,21 @@ elif st.session_state.stage == "interviewing":
             <div style="height:6px; background:#6366f1; width:{pct}%; border-radius:3px;"></div>
         </div>
     </div>
-    <div class="i-card">
+    <div class="i-card" style="margin-bottom: 24px;">
         <p style="font-size:0.78rem; font-weight:700; color:#6366f1; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Question {st.session_state.current_q}</p>
-        <div class="q-box">{st.session_state.active_question}</div>
+        <div class="q-box" style="margin-bottom: 20px;">{st.session_state.active_question}</div>
     </div>""", unsafe_allow_html=True)
 
-    # Cleaned up layout spacing for buttons to ensure text shows perfectly
-    if st.button("🔊 Read Question Aloud", use_container_width=True, key="speak_btn"):
-        speak_text(st.session_state.active_question)
+    # Isolated operational spacing row for the audio engine play trigger
+    col_btn, _ = st.columns([1, 2])
+    with col_btn:
+        if st.button("🔊 Read Question Aloud", use_container_width=True, key="speak_btn"):
+            speak_text(st.session_state.active_question)
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # Custom action header text acting as a natural UX indicator
     if not st.session_state.answered:
-        st.markdown("<p style='font-size:0.9rem; font-weight:700; color:#6366f1; margin-bottom:6px;'>🎙️ STEP 1: Click the Microphone to Start Speaking</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size:0.9rem; font-weight:700; color:#6366f1; margin-bottom:14px; margin-top:10px;'>🎙️ STEP 1: Click the Microphone Below to Start Speaking</p>", unsafe_allow_html=True)
     
     audio_bytes = st.audio_input("Record your response", label_visibility="collapsed", disabled=st.session_state.answered)
 
@@ -313,7 +315,7 @@ elif st.session_state.stage == "interviewing":
 
     if st.session_state.answered:
         st.markdown(f"""
-        <div class="i-card" style="margin-top:20px;">
+        <div class="i-card" style="margin-top:32px;">
             <p style="font-size:0.78rem; font-weight:700; color:#0ea5e9; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Your answer</p>
             <div style="background:#f0f9ff; border-left:4px solid #0ea5e9; border-radius:0 12px 12px 0; padding:16px 20px; color:#0c4a6e;">"{st.session_state.last_answer}"</div>
         </div>
