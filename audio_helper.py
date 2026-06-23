@@ -1,29 +1,25 @@
 import speech_recognition as sr
-import os
+from gtts import gTTS
+import io
+import streamlit as st
 
 def speak_text(text):
-    # Clean up quotes to prevent terminal syntax issues
-    clean_text = text.replace('"', '').replace("'", "")
-    
-    # We use a natural, clear voice ('Samantha') and set the speech rate to 160 words per minute (normal human speed)
-    # If you prefer a male voice, you can change "Samantha" to "Alex"
-    os.system(f'say -v "Samantha" -r 160 "{clean_text}"')
+    # Generates a clear human voice file using Google TTS
+    tts = gTTS(text=text, lang='en', tld='com')
+    fp = io.BytesIO()
+    tts.write_to_fp(fp)
+    fp.seek(0)
+    # Automatically embeds an invisible audio player that plays to the user's browser
+    st.audio(fp, format="audio/mp3", autoplay=True)
 
-def record_and_transcribe():
+def process_browser_audio(audio_file):
     recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("\n🎤 AI Recruiter is listening... Speak now.")
-        recognizer.adjust_for_ambient_noise(source, duration=1)
-        audio = recognizer.listen(source)
-        
     try:
-        print("🤖 Transcribing your answer...")
-        text = recognizer.recognize_google(audio)
-        print(f"You said: \"{text}\"")
+        # Convert the file uploaded by the web browser into an audio structure Python understands
+        with sr.AudioFile(audio_file) as source:
+            audio_data = recognizer.record(source)
+        text = recognizer.recognize_google(audio_data)
         return text
-    except sr.UnknownValueError:
-        print("❌ Sorry, I couldn't understand the audio.")
-        return None
-    except sr.RequestError:
-        print("❌ Speech service down.")
+    except Exception as e:
+        st.error(f"Transcription error: {str(e)}")
         return None
