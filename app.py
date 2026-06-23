@@ -12,6 +12,7 @@ def extract_score(evaluation_text):
 
 st.set_page_config(page_title="IntervAI", page_icon="👔", layout="wide", initial_sidebar_state="collapsed")
 
+# --- ADVANCED RESPONSIVE CSS EMULATION ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -21,84 +22,116 @@ st.markdown("""
 .block-container { padding: 0 !important; max-width: 100% !important; }
 [data-testid="stVerticalBlock"] { gap: 0 !important; }
 
-.nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 64px; height: 64px; border-bottom: 1px solid #e2e8f0;
-    background: #fff; position: sticky; top: 0; z-index: 100;
+/* --- BUTTON TEXT VISIBILITY FIX --- */
+div.stButton > button { 
+    color: #1e293b !important; 
+    background-color: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 10px !important; 
+    font-family: 'Inter', sans-serif !important; 
+    font-weight: 600 !important; 
+    font-size: 1rem !important; 
+    padding: 12px 24px !important;
+    transition: all 0.2s ease;
 }
-.nav-logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; color: #0f172a; }
-.nav-links { display: flex; gap: 32px; }
-.nav-links a { color: #475569; font-size: 0.9rem; font-weight: 500; text-decoration: none; }
-
-.hero {
-    padding: 96px 64px 80px; max-width: 1200px; margin: 0 auto;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+div.stButton > button:hover {
+    background-color: #e2e8f0 !important;
+    color: #0f172a !important;
+    border-color: #94a3b8 !important;
 }
-.hero-pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d;
-    font-size: 0.78rem; font-weight: 600; padding: 4px 12px; border-radius: 20px;
-    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 24px;
+div.stButton > button[type="primary"] {
+    color: #ffffff !important;
+    background-color: #6366f1 !important;
+    border: none !important;
 }
-.hero-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; display:inline-block; }
-.hero h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; letter-spacing: -2px; color: #0f172a; margin-bottom: 20px; }
-.hero h1 span { color: #6366f1; }
-.hero p { font-size: 1.1rem; color: #64748b; line-height: 1.7; margin-bottom: 36px; max-width: 480px; }
-.hero-stats { display: flex; gap: 32px; margin-top: 48px; padding-top: 32px; border-top: 1px solid #e2e8f0; }
-.stat-num { font-size: 1.75rem; font-weight: 800; color: #0f172a; letter-spacing: -1px; }
-.stat-label { font-size: 0.82rem; color: #94a3b8; font-weight: 500; margin-top: 2px; }
-
-.hero-visual { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 28px; }
-.mock-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-.mock-avatar {
-    width: 36px; height: 36px; border-radius: 50%; background: #6366f1; color: #fff;
-    display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700;
+div.stButton > button[type="primary"]:hover {
+    background-color: #4f46e5 !important;
 }
-.mock-name { font-size: 0.9rem; font-weight: 600; }
-.mock-role { font-size: 0.78rem; color: #94a3b8; }
-.mock-bubble { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; font-size: 0.88rem; line-height: 1.6; color: #374151; }
-.mock-bubble.ai { border-left: 3px solid #6366f1; }
-.mock-bubble.user { background: #f0f9ff; border-left: 3px solid #0ea5e9; }
-.mock-score { display: flex; align-items: center; justify-content: space-between; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px 16px; margin-top: 8px; }
-.score-val { font-size: 1.5rem; font-weight: 800; color: #15803d; }
-.score-bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 6px; overflow: hidden; }
-.score-fill { height: 100%; background: #22c55e; border-radius: 3px; width: 78%; }
 
-.features { background: #f8fafc; padding: 96px 64px; border-top: 1px solid #e2e8f0; }
-.section-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #6366f1; margin-bottom: 12px; }
-.section-title { font-size: 2.5rem; font-weight: 800; letter-spacing: -1.5px; color: #0f172a; margin-bottom: 14px; max-width: 600px; }
-.section-sub { font-size: 1.05rem; color: #64748b; max-width: 540px; margin-bottom: 56px; }
-.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto; }
-.feature-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; }
-.feature-icon { width: 44px; height: 44px; border-radius: 10px; background: #ede9fe; color: #6366f1; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 16px; }
-.feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: #0f172a; }
-.feature-card p { font-size: 0.88rem; color: #64748b; line-height: 1.6; }
-
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 56px; }
-.step { padding: 0 32px; }
-.step:not(:last-child) { border-right: 1px solid #e2e8f0; }
-.step-num { font-size: 3rem; font-weight: 800; color: #e2e8f0; letter-spacing: -2px; margin-bottom: 16px; line-height: 1; }
-.step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: #0f172a; }
-.step p { font-size: 0.88rem; color: #64748b; line-height: 1.6; }
-
-.interview-section { padding: 96px 64px; background: #f8fafc; border-top: 1px solid #e2e8f0; }
-.i-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 40px; margin-bottom: 20px; }
-.q-box { background: #f0f9ff; border-left: 4px solid #6366f1; border-radius: 0 12px 12px 0; padding: 20px 24px; font-size: 1.05rem; color: #1e293b; line-height: 1.6; margin: 20px 0; }
-.fb-box { background: #f0fdf4; border-left: 4px solid #22c55e; border-radius: 0 12px 12px 0; padding: 16px 20px; font-size: 0.93rem; color: #14532d; margin-top: 16px; }
-.progress-wrap { margin-bottom: 24px; }
-.progress-label { display: flex; justify-content: space-between; font-size: 0.82rem; color: #64748b; margin-bottom: 8px; }
-.progress-track { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
-
-.footer { padding: 40px 64px; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; background: #fff; }
-.footer-logo { font-size: 1rem; font-weight: 800; color: #0f172a; }
-.footer-note { font-size: 0.82rem; color: #94a3b8; }
-
+/* --- TEXT INPUT STYLING --- */
 div.stTextInput > div > div > input {
     border-radius: 10px !important; border: 1.5px solid #e2e8f0 !important;
     padding: 14px 16px !important; font-size: 1rem !important;
     font-family: 'Inter', sans-serif !important; background: #fff !important; color: #0f172a !important;
 }
-div.stButton > button { border-radius: 10px !important; font-family: 'Inter', sans-serif !important; font-weight: 600 !important; font-size: 1rem !important; padding: 12px 24px !important; }
+
+/* --- UNIVERSAL BREAKPOINTS FOR PERFECT MOBILE RESPONSIVENESS --- */
+.nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 64px; border-bottom: 1px solid #e2e8f0;
+    background: #fff; position: sticky; top: 0; z-index: 100;
+}
+.nav-logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; color: #0f172a; }
+.nav-links { display: flex; gap: 20px; }
+.nav-links a { color: #475569; font-size: 0.9rem; font-weight: 500; text-decoration: none; }
+
+.hero {
+    padding: 48px 24px; max-width: 1200px; margin: 0 auto;
+    display: flex; flex-direction: column; gap: 40px;
+}
+.hero h1 { font-size: 2.2rem; font-weight: 800; line-height: 1.2; letter-spacing: -1.5px; color: #0f172a; margin-bottom: 20px; }
+.hero h1 span { color: #6366f1; }
+.hero p { font-size: 1rem; color: #64748b; line-height: 1.6; margin-bottom: 24px; }
+.hero-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d;
+    font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px; width: fit-content;
+}
+.hero-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; display:inline-block; }
+.hero-stats { display: flex; flex-direction: column; gap: 20px; margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; }
+.stat-num { font-size: 1.5rem; font-weight: 800; color: #0f172a; }
+.stat-label { font-size: 0.8rem; color: #94a3b8; }
+
+.hero-visual { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; padding: 20px; width: 100%; }
+.mock-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.mock-avatar { width: 36px; height: 36px; border-radius: 50%; background: #6366f1; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+.mock-name { font-size: 0.88rem; font-weight: 600; }
+.mock-role { font-size: 0.75rem; color: #94a3b8; }
+.mock-bubble { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; font-size: 0.85rem; line-height: 1.5; color: #374151; }
+.mock-bubble.ai { border-left: 3px solid #6366f1; }
+.mock-bubble.user { background: #f0f9ff; border-left: 3px solid #0ea5e9; }
+.mock-score { display: flex; flex-direction: column; gap: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px; }
+
+.features { background: #f8fafc; padding: 64px 24px; border-top: 1px solid #e2e8f0; }
+.section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #6366f1; margin-bottom: 12px; text-align: center; }
+.section-title { font-size: 2rem; font-weight: 800; letter-spacing: -1px; color: #0f172a; margin-bottom: 12px; text-align: center; }
+.section-sub { font-size: 1rem; color: #64748b; text-align: center; margin-bottom: 40px; }
+.features-grid { display: flex; flex-direction: column; gap: 20px; }
+.feature-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; }
+.feature-icon { width: 40px; height: 40px; border-radius: 10px; background: #ede9fe; color: #6366f1; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 12px; }
+.feature-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+.feature-card p { font-size: 0.85rem; color: #64748b; line-height: 1.5; }
+
+.steps { display: flex; flex-direction: column; gap: 40px; margin-top: 40px; }
+.step { padding: 0; border-right: none !important; }
+.step-num { font-size: 2.5rem; font-weight: 800; color: #e2e8f0; margin-bottom: 8px; }
+
+.i-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 24px; margin-bottom: 16px; }
+.q-box { background: #f0f9ff; border-left: 4px solid #6366f1; border-radius: 0 12px 12px 0; padding: 16px; font-size: 1rem; color: #1e293b; line-height: 1.6; }
+.progress-wrap { margin-bottom: 20px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-bottom: 6px; }
+.progress-track { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+
+.footer { padding: 32px 24px; border-top: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 12px; align-items: center; background: #fff; text-align: center; }
+.footer-logo { font-size: 1rem; font-weight: 800; color: #0f172a; }
+.footer-note { font-size: 0.78rem; color: #94a3b8; }
+
+/* TABLET AND DESKTOP RESCUE OVERRIDES */
+@media (min-width: 768px) {
+    .nav { padding: 0 64px; }
+    .hero { padding: 96px 64px 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+    .hero h1 { font-size: 3.5rem; }
+    .hero p { font-size: 1.1rem; }
+    .hero-stats { flex-direction: row; gap: 32px; }
+    .hero-visual { padding: 28px; }
+    .features { padding: 96px 64px; }
+    .features-grid { grid-template-columns: repeat(3, 1fr); display: grid; gap: 24px; }
+    .steps { grid-template-columns: repeat(3, 1fr); display: grid; gap: 0; }
+    .step { padding: 0 32px; }
+    .step:not(:last-child) { border-right: 1px solid #e2e8f0 !important; }
+    .footer { padding: 40px 64px; flex-direction: row; justify-content: space-between; text-align: left; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -120,7 +153,6 @@ if st.session_state.stage == "home":
         <div class="nav-links">
             <a href="#features">Features</a>
             <a href="#how">How it works</a>
-            <a href="#practice">Practice now</a>
         </div>
     </nav>""", unsafe_allow_html=True)
 
@@ -149,9 +181,8 @@ if st.session_state.stage == "home":
             <div class="mock-bubble user">Sure — last quarter we had a memory leak in our Node service. I isolated it using heap snapshots and traced it back to an event listener that wasn't being cleaned up...</div>
             <div class="mock-score">
                 <div><div style="font-size:0.78rem; color:#15803d; font-weight:600;">Score</div><div class="score-val">8 / 10</div></div>
-                <div style="flex:1; margin-left:20px;">
+                <div style="flex:1;">
                     <div style="font-size:0.78rem; color:#64748b; margin-bottom:4px;">Strong structure. Add quantified impact.</div>
-                    <div class="score-bar"><div class="score-fill"></div></div>
                 </div>
             </div>
         </div>
@@ -175,7 +206,7 @@ if st.session_state.stage == "home":
     </section>""", unsafe_allow_html=True)
 
     st.markdown("""
-    <section style="padding:96px 64px; border-top:1px solid #e2e8f0;" id="how">
+    <section style="padding:64px 24px; border-top:1px solid #e2e8f0;" id="how">
         <div style="max-width:1200px; margin:0 auto;">
             <div class="section-label">How it works</div>
             <div class="section-title">Three steps to interview-ready</div>
@@ -189,18 +220,15 @@ if st.session_state.stage == "home":
 
     st.markdown("""
     <div id="practice" style="background:#f8fafc; border-top:1px solid #e2e8f0;
-         padding:72px 64px 24px; text-align:center;">
+         padding:48px 24px 24px; text-align:center;">
         <div class="section-label">Start Practicing</div>
-        <div style="font-size:2rem; font-weight:800; letter-spacing:-1px;
+        <div style="font-size:1.75rem; font-weight:800; letter-spacing:-1px;
              color:#0f172a; margin-bottom:10px;">
             Ready? Let's run your mock interview
         </div>
-        <p style="color:#64748b; font-size:1rem;">
-            It only takes 10 minutes. Enter your role below and hit Start.
-        </p>
     </div>""", unsafe_allow_html=True)
 
-    _, col_c, _ = st.columns([1, 2, 1])
+    _, col_c, _ = st.columns([1, 4, 1])
     with col_c:
         with st.container(border=True):
             st.markdown("**What role are you interviewing for?**")
@@ -239,7 +267,7 @@ if st.session_state.stage == "home":
 elif st.session_state.stage == "interviewing":
 
     st.markdown('<nav class="nav"><span class="nav-logo">👔 IntervAI</span></nav>', unsafe_allow_html=True)
-    st.markdown('<div style="max-width:760px; margin:48px auto; padding:0 24px;">', unsafe_allow_html=True)
+    st.markdown('<div style="max-width:760px; margin:24px auto; padding:0 16px;">', unsafe_allow_html=True)
 
     pct = int((st.session_state.current_q - 1) / st.session_state.max_questions * 100)
     st.markdown(f"""
@@ -257,18 +285,20 @@ elif st.session_state.stage == "interviewing":
         <div class="q-box">{st.session_state.active_question}</div>
     </div>""", unsafe_allow_html=True)
 
-    col_a, col_b = st.columns([1, 2])
-    with col_a:
-        if st.button("🔊 Read question aloud", use_container_width=True):
-            speak_text(st.session_state.active_question)
-    with col_b:
-        st.markdown(" ")
+    # Cleaned up layout spacing for buttons to ensure text shows perfectly
+    if st.button("🔊 Read Question Aloud", use_container_width=True, key="speak_btn"):
+        speak_text(st.session_state.active_question)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    audio_bytes = st.audio_input("Record your answer below", disabled=st.session_state.answered)
+    
+    # Custom action header text acting as a natural UX indicator
+    if not st.session_state.answered:
+        st.markdown("<p style='font-size:0.9rem; font-weight:700; color:#6366f1; margin-bottom:6px;'>🎙️ STEP 1: Click the Microphone to Start Speaking</p>", unsafe_allow_html=True)
+    
+    audio_bytes = st.audio_input("Record your response", label_visibility="collapsed", disabled=st.session_state.answered)
 
     if audio_bytes and not st.session_state.answered:
-        with st.spinner("Scoring your answer…"):
+        with st.spinner("Decoding audio frequencies and scoring answer…"):
             user_answer = process_browser_audio(audio_bytes)
             
             if user_answer:
@@ -279,7 +309,7 @@ elif st.session_state.stage == "interviewing":
                 st.session_state.answered = True
                 st.rerun()
             else:
-                st.error("Could not decode audio transcription data. Please try speaking closer to your mic.")
+                st.error("Could not parse clean audio response. Try testing again or moving closer to your device mic.")
 
     if st.session_state.answered:
         st.markdown(f"""
@@ -321,25 +351,25 @@ elif st.session_state.stage == "complete":
     color = '#22c55e' if percentage >= 80 else '#f59e0b' if percentage >= 50 else '#ef4444'
 
     st.markdown(f"""
-    <div style="max-width:760px; margin:64px auto; padding:0 24px; text-align:center;">
+    <div style="max-width:760px; margin:48px auto; padding:0 16px; text-align:center;">
         <div style="font-size:3.5rem; margin-bottom:16px;">{emoji}</div>
-        <h1 style="font-size:2.5rem; font-weight:800; letter-spacing:-1.5px; margin-bottom:12px;">Interview complete</h1>
-        <p style="color:#64748b; font-size:1.05rem; margin-bottom:48px;">
+        <h1 style="font-size:2.2rem; font-weight:800; letter-spacing:-1.5px; margin-bottom:12px;">Interview complete</h1>
+        <p style="color:#64748b; font-size:1rem; margin-bottom:32px;">
             Here's how you did across {len(st.session_state.score_history)} questions for <strong>{st.session_state.field}</strong>.
         </p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:32px;">
+        <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:32px;">
             <div class="i-card" style="text-align:center;">
                 <div style="font-size:0.8rem; color:#64748b; font-weight:600; margin-bottom:8px;">TOTAL SCORE</div>
-                <div style="font-size:3rem; font-weight:800; color:#0f172a; letter-spacing:-2px;">{final_score}<span style="font-size:1.5rem; color:#94a3b8;">/{max_possible}</span></div>
+                <div style="font-size:2.5rem; font-weight:800; color:#0f172a; letter-spacing:-2px;">{final_score}<span style="font-size:1.25rem; color:#94a3b8;">/{max_possible}</span></div>
             </div>
             <div class="i-card" style="text-align:center;">
                 <div style="font-size:0.8rem; color:#64748b; font-weight:600; margin-bottom:8px;">ACCURACY</div>
-                <div style="font-size:3rem; font-weight:800; color:{color}; letter-spacing:-2px;">{percentage:.0f}<span style="font-size:1.5rem;">%</span></div>
+                <div style="font-size:2.5rem; font-weight:800; color:{color}; letter-spacing:-2px;">{percentage:.0f}<span style="font-size:1.25rem;">%</span></div>
             </div>
         </div>
     </div>""", unsafe_allow_html=True)
 
-    _, col_c, _ = st.columns([1, 3, 1])
+    _, col_c, _ = st.columns([1, 4, 1])
     with col_c:
         if percentage >= 80:
             st.success("You're interview-ready! Great structure and confident delivery.")
