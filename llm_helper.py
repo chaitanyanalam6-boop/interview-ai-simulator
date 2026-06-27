@@ -1,51 +1,54 @@
-import os
+import streamlit as st
 from groq import Groq
 
-# Initialize the free Groq client
-client = Groq(api_key="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")
+# 1. Check if the secret key name exists at all in your Streamlit settings
+if "GROQ_API_KEY" not in st.secrets:
+    st.error("❌ CRITICAL: Streamlit Cloud cannot find a secret named 'GROQ_API_KEY'. Please open your Secrets Dashboard and check the spelling.")
+    st.stop()
 
-# TOOL 1: Generates questions with a conversational, human style
+# 2. Extract the key value safely
+api_key_value = st.secrets["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"]
+
+# 3. Check if the key value was accidentally left blank or contains placeholders
+if not api_key_value or api_key_value.strip() == "" or "your_actual_key" in api_key_value:
+    st.error("❌ CRITICAL: The GROQ_API_KEY secret exists in your dashboard, but it is empty or contains placeholder text.")
+    st.stop()
+
+# 4. Initialize the Groq client securely using the validated key string
+try:
+    client = Groq(api_key=api_key_value)
+except Exception as e:
+    st.error(f"❌ CRITICAL: Failed to initialize Groq client: {str(e)}")
+    st.stop()
+
+
 def generate_interview_question(field, question_number):
+    """
+    Generates a structured interview question based on the chosen career field.
+    """
     messages = [
         {
-            "role": "system", 
-            "content": """You are a warm, professional tech recruiter conducting a live voice interview. 
-            You speak naturally, directly, and encouragingly. 
-            CRITICAL: Output ONLY the question text itself as if you are saying it out loud to the candidate. 
-            Never include any introductory phrases like 'Sure, here is your question' or any score layouts."""
+            "role": "system",
+            "content": (
+                f"You are an expert technical interviewer in the field of {field}. "
+                f"Ask a precise, realistic interview question suited for a junior to mid-level role. "
+                "Output ONLY the question text. Do not include introductory text, conversational pleasantries, "
+                "or conversational follow-ups."
+            )
         },
         {
-            "role": "user", 
-            "content": f"Ask me question number {question_number} for a {field} position. Make it sound like a real, conversational interview question."
+            "role": "user",
+            "content": f"Generate interview question number {question_number}."
         }
     ]
     
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=messages,
-        temperature=0.7
-    )
-    return response.choices[0].message.content.strip()
-
-# TOOL 2: Grades your answer like an empathetic, constructive mentor
-def get_interview_feedback(question, answer):
-    prompt = f"""
-    You are an encouraging technical interviewer. Review the candidate's response to the question with empathy and constructive insight.
-    
-    Interview Question: {question}
-    Candidate's Answer: {answer}
-    
-    Structure your response exactly like this:
-    ### Recruiter Feedback
-    [Provide a supportive critique. Start by highlighting what they did right or tried to do, followed by a professional, clear explanation of how they can improve or what they might have missed.]
-    
-    ### Score
-    [X/10]
-    """
-    
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7
-    )
-    return response.choices[0].message.content
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=messages,
+            temperature=0.7
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        st.error(f"⚠️ Failed to communicate with Groq API: {str(e)}")
+        return "Could not generate question due to an unexpected API error."
