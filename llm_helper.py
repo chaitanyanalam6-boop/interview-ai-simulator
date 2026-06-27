@@ -44,7 +44,7 @@ def generate_interview_question(field, question_number):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-specdec",  # Stable active production model ID
+            model="llama-3.3-70b-versatile",  # Live, fully supported standard production model ID
             messages=messages,
             temperature=0.7
         )
@@ -77,7 +77,7 @@ def get_interview_feedback(field, question, user_answer):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-specdec",  # Stable active production model ID
+            model="llama-3.3-70b-versatile",  # Live, fully supported standard production model ID
             messages=messages,
             temperature=0.3
         )
