@@ -44,7 +44,7 @@ def generate_interview_question(field, question_number):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.3-70b-specdec",  # Stable active production model ID
             messages=messages,
             temperature=0.7
         )
@@ -64,7 +64,7 @@ def get_interview_feedback(field, question, user_answer):
             "content": (
                 f"You are an expert technical interviewer assessing a candidate in the field of {field}. "
                 f"Analyze the user's answer to the question: '{question}'. "
-                "Provide construction feedback and a definitive score out of 10. "
+                "Provide constructive feedback and a definitive score out of 10. "
                 "Your final response MUST include a clear score indicator format like 'Score: X/10' "
                 "so the application can easily parse the mathematical data."
             )
@@ -77,7 +77,7 @@ def get_interview_feedback(field, question, user_answer):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.3-70b-specdec",  # Stable active production model ID
             messages=messages,
             temperature=0.3
         )
