@@ -44,26 +44,26 @@ def generate_interview_question(field, question_number):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.3-70b-versatile",  # Fully active production model ID
             messages=messages,
             temperature=0.7
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        # Crucial Fix: Print the exact server error directly on screen so we see the true cause
-        st.error(f"🚨 Raw Server Error: {str(e)}")
-        return f"Could not ask the question. Error Details: {str(e)}"
+        st.error(f"⚠️ Failed to communicate with Groq API: {str(e)}")
+        return "Could not generate question due to an unexpected API error."
 
 
-def get_interview_feedback(field, question, user_answer):
+def get_interview_feedback(question, user_answer):
     """
     Evaluates the user's answer and provides a structured score and critique.
+    Modified to accept 2 arguments to perfectly match app.py line 308.
     """
     messages = [
         {
             "role": "system",
             "content": (
-                f"You are an expert technical interviewer assessing a candidate in the field of {field}. "
+                "You are an expert technical interviewer assessing a candidate's response. "
                 f"Analyze the user's answer to the question: '{question}'. "
                 "Provide constructive feedback and a definitive score out of 10. "
                 "Your final response MUST include a clear score indicator format like 'Score: X/10' "
@@ -78,11 +78,11 @@ def get_interview_feedback(field, question, user_answer):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="llama-3.3-70b-versatile",  # Fully active production model ID
             messages=messages,
             temperature=0.3
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
         st.error(f"⚠️ Failed to generate feedback: {str(e)}")
-        return f"Feedback unavailable. Error Details: {str(e)}"
+        return "Feedback unavailable due to an unexpected server communication error."
