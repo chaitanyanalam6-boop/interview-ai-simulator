@@ -44,14 +44,15 @@ def generate_interview_question(field, question_number):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",  # Live, fully supported standard production model ID
+            model="llama-3.3-70b-versatile",
             messages=messages,
             temperature=0.7
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        st.error(f"⚠️ Failed to communicate with Groq API: {str(e)}")
-        return "Could not generate question due to an unexpected API error."
+        # Crucial Fix: Print the exact server error directly on screen so we see the true cause
+        st.error(f"🚨 Raw Server Error: {str(e)}")
+        return f"Could not ask the question. Error Details: {str(e)}"
 
 
 def get_interview_feedback(field, question, user_answer):
@@ -77,11 +78,11 @@ def get_interview_feedback(field, question, user_answer):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",  # Live, fully supported standard production model ID
+            model="llama-3.3-70b-versatile",
             messages=messages,
             temperature=0.3
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
         st.error(f"⚠️ Failed to generate feedback: {str(e)}")
-        return "Feedback unavailable due to an unexpected server communication error."
+        return f"Feedback unavailable. Error Details: {str(e)}"
